@@ -155,49 +155,5 @@ namespace AuctionApp.Controllers
             }
             return View(vm);
         }
-
-        /*
-        // GET: AuctionsController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AuctionsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        public ActionResult MyBids()
-        {
-            string owner = User.Identity.Name;
-            List<Auction> auctions = _auctionService.GetMyBids(owner);
-            List<AuctionVM> auctionVMs = new();
-            foreach (var auction in auctions)
-            {
-                Console.WriteLine("Now comparing:"   + owner);
-                foreach (var bid in auction.Bids)
-                {
-                    Console.WriteLine("Now comparing: " + bid.Bidder + " and " + owner);
-                    if (bid.Bidder.Equals(owner))
-                    {
-                        auctionVMs.Add(AuctionVM.FromAuction(auction));
-                        break;
-                    }
-                }
-            }
-            return View(auctionVMs);
-        }
-        */
     }
 }
