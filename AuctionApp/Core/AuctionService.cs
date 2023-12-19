@@ -7,18 +7,18 @@ namespace AuctionApp.Core
     {
         private IAuctionPersistence _auctionPersistence;
 
-        public Boolean GetWonAuctions(int id, string owner)
+        public List<Auction> GetWonAuctions(string owner)
         {
-            return _auctionPersistence.GetWonAuctions(id, owner);
+            return _auctionPersistence.GetWonAuctions(owner);
         }
 
         public AuctionService(IAuctionPersistence auctionPersistence)
         {
             _auctionPersistence = auctionPersistence;
         }
-        public Boolean GetMyBids(int id, string owner)
+        public List<Auction> GetMyBids(string owner)
         {
-            return _auctionPersistence.GetMyBids(id, owner);
+            return _auctionPersistence.GetMyBids(owner);
         }
 
         public List<Auction> GetAll(string owner)
@@ -49,7 +49,10 @@ namespace AuctionApp.Core
         {
             Auction auction = _auctionPersistence.GetById(id);
 
-            if(auction.Bids.Count() != 0 && bid.BidAmount < auction.Bids.Max(b => b.BidAmount) || bid.BidAmount < auction.StartingPrice)
+            if(auction.Bids.Count() != 0 
+                && bid.BidAmount < auction.Bids.Max(b => b.BidAmount) 
+                    || bid.BidAmount < auction.StartingPrice 
+                        || auction.EndTime < DateTime.Now)
             {
                 return;
             }

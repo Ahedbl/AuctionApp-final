@@ -2,8 +2,8 @@
 {
     public interface IAuctionService
     {
-        public Boolean GetWonAuctions(int id, string owner);
-        public Boolean GetMyBids(int id, string owner);
+        public List<Auction> GetWonAuctions(string owner);
+        public List<Auction> GetMyBids(string owner);
         List<Auction> GetAll(string owner);
 
         List<Auction> GetMyAuctions(string owner);

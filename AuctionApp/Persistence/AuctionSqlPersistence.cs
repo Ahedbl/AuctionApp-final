@@ -46,46 +46,32 @@ namespace AuctionApp.Persistence
             }
             return result;
         }
-        public Boolean GetMyBids(int id, string owner)
+        public List<Auction> GetMyBids(string owner)
         {
-            Boolean ownerBids = false;
-            // Eager loading
-            var auctionDb = _dbContext.AuctionDbs
-                .Include(a => a.BidDbs.OrderByDescending(a => a.BidAmount))
-                .Where(a => a.Id == id)
-                .SingleOrDefault();
-
-            Auction auction = _mapper.Map<Auction>(auctionDb);
-
-            foreach (BidDb bdb in auctionDb.BidDbs)
+            var auctionDbs = _dbContext.AuctionDbs
+                .Where(a => a.BidDbs.Any(b => b.Bidder == owner))
+                .ToList();
+            List<Auction> result = new List<Auction>();
+            foreach (AuctionDb adb in auctionDbs)
             {
-
-                auction.AddBid(_mapper.Map<Bid>(bdb));
-                if (bdb.Bidder == owner && auction.EndTime > DateTime.UtcNow) ownerBids = true;
+                Auction auction = _mapper.Map<Auction>(adb);
+                result.Add(auction);
             }
-            return ownerBids;
+            return result;
         }
-        public Boolean GetWonAuctions(int id, string owner)
+        public List<Auction> GetWonAuctions(string owner)
         {
-            Boolean ownerWon = false;
-            // Eager loading
-            var auctionDb = _dbContext.AuctionDbs
-                .Include(a => a.BidDbs.OrderByDescending(a => a.BidAmount))
-                .Where(a => a.Id == id)
-                .SingleOrDefault();
+            DateTime currentTime = DateTime.Now;
 
-            Auction auction = _mapper.Map<Auction>(auctionDb);
-            double highestBid = -1;
-            double ownerBid = -2;
-            if (auction.EndTime < DateTime.UtcNow) return false;
-            foreach (BidDb bdb in auctionDb.BidDbs)
-            {
-                auction.AddBid(_mapper.Map<Bid>(bdb));
-                if(bdb.BidAmount> highestBid) highestBid = bdb.BidAmount;
-                if (bdb.Bidder == owner) ownerBid = bdb.BidAmount;
-            }
-            if (highestBid == ownerBid) ownerWon = true;
-            return ownerWon;
+            var wonAuctions = _dbContext.AuctionDbs
+                .Where(a => a.EndTime < currentTime 
+                    && a.BidDbs.Any(b => b.Bidder == owner 
+                        && b.BidAmount == a.BidDbs.Max(maxBid => maxBid.BidAmount)))
+                .ToList();
+
+            List<Auction> result = _mapper.Map<List<Auction>>(wonAuctions);
+
+            return result;
         }
 
 
@@ -138,7 +124,7 @@ namespace AuctionApp.Persistence
         public void Edit(int id, string description)
         {
             var auctionDb = _dbContext.AuctionDbs.Find(id);
-            auctionDb.Description = description; // Add check for null?
+            auctionDb.Description = description;
             _dbContext.SaveChanges();
         }
     }

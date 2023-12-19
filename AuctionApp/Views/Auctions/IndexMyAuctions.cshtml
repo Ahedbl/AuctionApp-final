@@ -6,9 +6,7 @@
 
 <h1>My auctions</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -44,7 +42,7 @@
             </td>
             <td>
                     @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Edit description", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Edit description", "Edit", new { id = item.Id }) 
             </td>
         </tr>
 }

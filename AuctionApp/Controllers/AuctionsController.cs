@@ -47,12 +47,12 @@ namespace AuctionApp.Controllers
         public ActionResult MyBids()
         {
             string owner = User.Identity.Name;
-            List<Auction> auctions = _auctionService.GetAll(owner);
+            List<Auction> auctions = _auctionService.GetMyBids(owner);
             List<AuctionVM> auctionVMs = new();
+
             foreach (var auction in auctions)
             {
-
-                if(_auctionService.GetMyBids(auction.Id,owner)) auctionVMs.Add(AuctionVM.FromAuction(auction));
+                auctionVMs.Add(AuctionVM.FromAuction(auction));
             }
             return View(auctionVMs);
         }
@@ -60,11 +60,12 @@ namespace AuctionApp.Controllers
         public ActionResult MyWonAuctions()
         {
             string owner = User.Identity.Name;
-            List<Auction> auctions = _auctionService.GetAll(owner);
+            List<Auction> auctions = _auctionService.GetWonAuctions(owner);
             List<AuctionVM> auctionVMs = new();
+
             foreach (var auction in auctions)
             {
-                if (_auctionService.GetWonAuctions(auction.Id, owner)) auctionVMs.Add(AuctionVM.FromAuction(auction));
+                auctionVMs.Add(AuctionVM.FromAuction(auction));
             }
             return View(auctionVMs);
         }

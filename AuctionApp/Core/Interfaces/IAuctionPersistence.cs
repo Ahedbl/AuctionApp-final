@@ -2,8 +2,8 @@
 {
     public interface IAuctionPersistence
     {
-        public Boolean GetWonAuctions(int id, string owner);
-        public Boolean GetMyBids(int id, string owner);
+        List<Auction> GetWonAuctions(string owner);
+        List<Auction> GetMyBids(string owner);
         List<Auction> GetAll(string owner);
 
         List<Auction> GetMyAuctions(string owner);
