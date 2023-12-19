@@ -47,7 +47,7 @@ namespace AuctionApp.Controllers
         public ActionResult MyBids()
         {
             string owner = User.Identity.Name;
-            List<Auction> auctions = _auctionService.GetMyAuctions(owner);
+            List<Auction> auctions = _auctionService.GetAll(owner);
             List<AuctionVM> auctionVMs = new();
             foreach (var auction in auctions)
             {

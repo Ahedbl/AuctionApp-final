@@ -56,14 +56,12 @@ namespace AuctionApp.Persistence
                 .SingleOrDefault();
 
             Auction auction = _mapper.Map<Auction>(auctionDb);
-            Console.WriteLine("Currently looking at id: " + id);
-            Console.WriteLine(auctionDb.BidDbs);
+
             foreach (BidDb bdb in auctionDb.BidDbs)
             {
-                Console.WriteLine("inne3");
-                Console.WriteLine("Now comparing:" + owner + " and " + bdb.Bidder);
+
                 auction.AddBid(_mapper.Map<Bid>(bdb));
-                if (bdb.Bidder.Equals(owner)) ownerBids = true;
+                if (bdb.Bidder == owner && auction.EndTime > DateTime.UtcNow) ownerBids = true;
             }
             return ownerBids;
         }
