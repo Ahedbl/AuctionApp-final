@@ -19,18 +19,18 @@ namespace AuctionApp.Persistence
 
         public List<Auction> GetAll(string owner)
         {
+            var currentTime = DateTime.Now;
+
             var auctionDbs = _dbContext.AuctionDbs
-                .Where(a => a.Owner != owner)
+                .Where(a => a.Owner != owner && a.EndTime > currentTime)
+                .OrderByDescending(a => a.EndTime)
                 .ToList();
 
-            List<Auction> result = new List<Auction>();
-            foreach(AuctionDb adb in auctionDbs)
-            {
-                Auction auction = _mapper.Map<Auction>(adb);
-                result.Add(auction);
-            }
+            List<Auction> result = _mapper.Map<List<Auction>>(auctionDbs);
+
             return result;
         }
+
 
         public List<Auction> GetMyAuctions(string owner)
         {
@@ -48,8 +48,9 @@ namespace AuctionApp.Persistence
         }
         public List<Auction> GetMyBids(string owner)
         {
+            var currentTime = DateTime.Now;
             var auctionDbs = _dbContext.AuctionDbs
-                .Where(a => a.BidDbs.Any(b => b.Bidder == owner))
+                .Where(a => a.BidDbs.Any(b => b.Bidder == owner) && a.EndTime > currentTime)
                 .ToList();
             List<Auction> result = new List<Auction>();
             foreach (AuctionDb adb in auctionDbs)
