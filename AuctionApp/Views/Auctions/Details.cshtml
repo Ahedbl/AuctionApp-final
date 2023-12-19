@@ -1,0 +1,67 @@
+﻿@model AuctionApp.ViewModels.AuctionDetailsVM
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Auction details</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StartingPrice)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StartingPrice)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EndTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EndTime)
+        </dd>
+    </dl>
+</div>
+<p/>
+<div>
+    <h4>Bids</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <b>Bid</b>
+                </th>
+                <th>
+                    <b>Time of bid</b>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model.BidVMs)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BidAmount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TimeOfBid)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
