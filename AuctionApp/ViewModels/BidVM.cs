@@ -9,6 +9,7 @@ namespace AuctionApp.ViewModels
         public double BidAmount { get; set; }
 
         public DateTime TimeOfBid { get; set; }
+        public string Bidder {  get; set; }
 
         public static BidVM FromBid(Bid bid)
         {
@@ -16,7 +17,8 @@ namespace AuctionApp.ViewModels
             {
                 Id = bid.Id,
                 BidAmount = bid.BidAmount,
-                TimeOfBid = bid.TimeOfBid
+                TimeOfBid = bid.TimeOfBid,
+                Bidder = bid.Bidder
             };
         }
     }
