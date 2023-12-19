@@ -43,6 +43,51 @@ namespace AuctionApp.Controllers
             return View(auctionVMs);
         }
 
+        public ActionResult MyBids()
+        {
+            string owner = User.Identity.Name;
+            List<Auction> auctions = _auctionService.GetAll(owner);
+            List<AuctionVM> auctionVMs = new();
+            foreach (var auction in auctions)
+            {
+
+                foreach (var bid in auction.Bids)
+                {
+
+                    if (bid.Bidder.Equals(owner))
+                    {
+                        auctionVMs.Add(AuctionVM.FromAuction(auction));
+                        break;
+                    }
+                }
+            }
+            return View(auctionVMs);
+        }
+
+        public ActionResult MyWonAuctions()
+        {
+            string owner = User.Identity.Name;
+            List<Auction> auctions = _auctionService.GetAll(owner);
+            List<AuctionVM> auctionVMs = new();
+            foreach (var auction in auctions) //gå igenom alla auctions
+            {
+                if(auction.EndTime < DateTime.UtcNow) //ta enbart de som gått ut
+                {
+                    double highestBid = -1;
+                    double myBid = -2;
+                    foreach (var bid in auction.Bids) // gå igenom buden
+                    {
+                        if (bid.BidAmount > highestBid) highestBid = bid.BidAmount; //håll koll på högsta budet
+                        if (bid.Bidder.Equals(owner)) myBid = bid.BidAmount; // registrera egna budet om det finns
+
+                        if (highestBid == myBid) auctionVMs.Add(AuctionVM.FromAuction(auction)); // om det egna budet finns och är störst, lista auction
+                    }
+                }
+                
+            }
+            return View(auctionVMs);
+        }
+
         // GET: AuctionsController/Details/5
         public ActionResult Details(int id)
         {
@@ -99,7 +144,8 @@ namespace AuctionApp.Controllers
                 Auction auction = _auctionService.GetById(id);
                 Bid bid = new Bid()
                 {
-                    BidAmount = vm.BidAmount
+                    BidAmount = vm.BidAmount,
+                    Bidder = User.Identity.Name
                 };
                 _auctionService.Add(auction.Id, bid);
                 return RedirectToAction("Index");

@@ -12,6 +12,7 @@ namespace AuctionApp.Persistence
 
         [DataType(DataType.DateTime)]
         public DateTime TimeOfBid { get; set; }
+        public string Bidder { get; set; }
 
         [ForeignKey("AuctionId")]
         public AuctionDb AuctionDb { get; set; }

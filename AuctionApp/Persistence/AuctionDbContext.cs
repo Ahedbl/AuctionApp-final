@@ -29,14 +29,16 @@ namespace AuctionApp.Persistence
                 Id = -1,
                 BidAmount = 150,
                 TimeOfBid = new DateTime(2023, 12, 25, 12, 45, 00),
-                AuctionId = -1
+                AuctionId = -1,
+                Bidder = "Bill@mail.com"
             };
             BidDb bdb2 = new BidDb()
             {
                 Id = -2,
                 BidAmount = 200,
                 TimeOfBid = new DateTime(2023, 12, 26, 09, 10, 00),
-                AuctionId = -1
+                AuctionId = -1,
+                Bidder = "Bill@mail.com"
             };
             modelBuilder.Entity<BidDb>().HasData(bdb1);
             modelBuilder.Entity<BidDb>().HasData(bdb2);
