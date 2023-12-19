@@ -2,6 +2,7 @@
 using AuctionApp.Core.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 
 namespace AuctionApp.Persistence
 {
@@ -45,6 +46,28 @@ namespace AuctionApp.Persistence
             }
             return result;
         }
+        public Boolean GetMyBids(int id, string owner)
+        {
+            Boolean ownerBids = false;
+            // Eager loading
+            var auctionDb = _dbContext.AuctionDbs
+                .Include(a => a.BidDbs.OrderByDescending(a => a.BidAmount))
+                .Where(a => a.Id == id)
+                .SingleOrDefault();
+
+            Auction auction = _mapper.Map<Auction>(auctionDb);
+            Console.WriteLine("Currently looking at id: " + id);
+            Console.WriteLine(auctionDb.BidDbs);
+            foreach (BidDb bdb in auctionDb.BidDbs)
+            {
+                Console.WriteLine("inne3");
+                Console.WriteLine("Now comparing:" + owner + " and " + bdb.Bidder);
+                auction.AddBid(_mapper.Map<Bid>(bdb));
+                if (bdb.Bidder.Equals(owner)) ownerBids = true;
+            }
+            return ownerBids;
+        }
+
 
         public Auction GetById(int id)
         {
@@ -56,6 +79,21 @@ namespace AuctionApp.Persistence
 
             Auction auction = _mapper.Map<Auction>(auctionDb);
             foreach(BidDb bdb in auctionDb.BidDbs)
+            {
+                auction.AddBid(_mapper.Map<Bid>(bdb));
+            }
+            return auction;
+        }
+        public Auction MyBids(int id)
+        {
+            // Eager loading
+            var auctionDb = _dbContext.AuctionDbs
+                .Include(a => a.BidDbs.OrderByDescending(a => a.BidAmount))
+                .Where(a => a.Id == id)
+                .SingleOrDefault();
+
+            Auction auction = _mapper.Map<Auction>(auctionDb);
+            foreach (BidDb bdb in auctionDb.BidDbs)
             {
                 auction.AddBid(_mapper.Map<Bid>(bdb));
             }

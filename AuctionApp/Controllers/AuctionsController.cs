@@ -4,6 +4,7 @@ using AuctionApp.Core;
 using AuctionApp.Core.Interfaces;
 using AuctionApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Cryptography;
 
 namespace AuctionApp.Controllers
 {
@@ -46,20 +47,12 @@ namespace AuctionApp.Controllers
         public ActionResult MyBids()
         {
             string owner = User.Identity.Name;
-            List<Auction> auctions = _auctionService.GetAll(owner);
+            List<Auction> auctions = _auctionService.GetMyAuctions(owner);
             List<AuctionVM> auctionVMs = new();
             foreach (var auction in auctions)
             {
 
-                foreach (var bid in auction.Bids)
-                {
-
-                    if (bid.Bidder.Equals(owner))
-                    {
-                        auctionVMs.Add(AuctionVM.FromAuction(auction));
-                        break;
-                    }
-                }
+                if(_auctionService.GetMyBids(auction.Id,owner)) auctionVMs.Add(AuctionVM.FromAuction(auction));
             }
             return View(auctionVMs);
         }
@@ -194,6 +187,27 @@ namespace AuctionApp.Controllers
             {
                 return View();
             }
+        }
+
+        public ActionResult MyBids()
+        {
+            string owner = User.Identity.Name;
+            List<Auction> auctions = _auctionService.GetMyBids(owner);
+            List<AuctionVM> auctionVMs = new();
+            foreach (var auction in auctions)
+            {
+                Console.WriteLine("Now comparing:"   + owner);
+                foreach (var bid in auction.Bids)
+                {
+                    Console.WriteLine("Now comparing: " + bid.Bidder + " and " + owner);
+                    if (bid.Bidder.Equals(owner))
+                    {
+                        auctionVMs.Add(AuctionVM.FromAuction(auction));
+                        break;
+                    }
+                }
+            }
+            return View(auctionVMs);
         }
         */
     }

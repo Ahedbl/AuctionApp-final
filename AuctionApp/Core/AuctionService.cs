@@ -1,4 +1,5 @@
 ﻿using AuctionApp.Core.Interfaces;
+using AuctionApp.Persistence;
 
 namespace AuctionApp.Core
 {
@@ -6,9 +7,14 @@ namespace AuctionApp.Core
     {
         private IAuctionPersistence _auctionPersistence;
 
+        
         public AuctionService(IAuctionPersistence auctionPersistence)
         {
             _auctionPersistence = auctionPersistence;
+        }
+        public Boolean GetMyBids(int id, string owner)
+        {
+            return _auctionPersistence.GetMyBids(id, owner);
         }
 
         public List<Auction> GetAll(string owner)
