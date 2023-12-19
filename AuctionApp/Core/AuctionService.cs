@@ -7,7 +7,11 @@ namespace AuctionApp.Core
     {
         private IAuctionPersistence _auctionPersistence;
 
-        
+        public Boolean GetWonAuctions(int id, string owner)
+        {
+            return _auctionPersistence.GetWonAuctions(id, owner);
+        }
+
         public AuctionService(IAuctionPersistence auctionPersistence)
         {
             _auctionPersistence = auctionPersistence;

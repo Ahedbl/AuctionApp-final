@@ -65,6 +65,28 @@ namespace AuctionApp.Persistence
             }
             return ownerBids;
         }
+        public Boolean GetWonAuctions(int id, string owner)
+        {
+            Boolean ownerWon = false;
+            // Eager loading
+            var auctionDb = _dbContext.AuctionDbs
+                .Include(a => a.BidDbs.OrderByDescending(a => a.BidAmount))
+                .Where(a => a.Id == id)
+                .SingleOrDefault();
+
+            Auction auction = _mapper.Map<Auction>(auctionDb);
+            double highestBid = -1;
+            double ownerBid = -2;
+            if (auction.EndTime < DateTime.UtcNow) return false;
+            foreach (BidDb bdb in auctionDb.BidDbs)
+            {
+                auction.AddBid(_mapper.Map<Bid>(bdb));
+                if(bdb.BidAmount> highestBid) highestBid = bdb.BidAmount;
+                if (bdb.Bidder == owner) ownerBid = bdb.BidAmount;
+            }
+            if (highestBid == ownerBid) ownerWon = true;
+            return ownerWon;
+        }
 
 
         public Auction GetById(int id)
